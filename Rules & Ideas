@@ -1,0 +1,17 @@
+What should my project have?
+
+*1. Options : Search, add, delete, rename/edit, display function to display the contact if not empty 
+ 
+*2. A list of names arranged alphabetically
+
+*3. New contact first created and validified then added:  When new name added, should be rearranged alphabetically,
+
+*4. One or multiple deletion at once must be permissible
+
+5. Favourites - Marking certain contacts (how to do that? : You can try with pointers)  
+                                              OR
+               Create an array that stores the position of the contacts that are marked as favourites
+
+6. I will provide a list of alphabets from A to Z,
+
+  If you press A, you will get a list of names starting with A and so on.
