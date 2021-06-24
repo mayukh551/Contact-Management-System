@@ -1,3 +1,23 @@
+Project : Contact Management System
+
+
+Tools:
+
+1. First Learn file handling and boolean datatypes
+
+2. Linkedlist or arrays to store a list of contact names, numbers, and email address
+
+3. strings for storing email adress, names : validfy email address by checking if last letters are "@gmail.com"
+
+   **String functions as header file and string handling**
+
+4. use int variables to store numbers
+
+5. You have to string sorting algorithm
+
+6. Store all information in .txt file extension and access them using file handling
+
+
 What should my project have?
 
 *1. Options : Search, add, delete, rename/edit, display function to display the contact if not empty 
