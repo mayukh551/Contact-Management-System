@@ -1,0 +1,10 @@
+Abesh:
+1. Display function to display the contacts
+2. A function to edit any contact
+3. Search function
+
+Mayukh:
+1. Extract existing information from file.txt and put them into arrays
+2. Store new changes into file.txt from the array
+3. Insert function,  Delete function
+4. Search function
