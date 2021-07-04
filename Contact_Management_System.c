@@ -2,18 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-/*int main(){
-	FILE *fp = fopen("C:\\Users\\MAYUKH\\Desktop\\Discord_Content.txt","r");
-	if(fp==NULL){
-		printf("File can't be opened");
-	}
-	else{
-		printf("File can be opened");
-	}
-	fclose(fp);
-}*/
-
-
 
 struct contact{
 	char name[50];  // to store the name of a person
@@ -32,11 +20,95 @@ void display(struct contact *ptr){
 	}
 }
 
+void update_names(struct contact* ptr)       // updating contact names
+{	
+	FILE *file_update = fopen("contact_names.txt","w");
+	
+	if(file_update==NULL){
+		printf("File contact_names.txt cannot be opened"); exit(0);
+	}
+	while(ptr!=0){
+		fputs(ptr->name,file_update); ptr=ptr->next;}
+		
+	fclose(file_update);
+}
+
+void update_emails(struct contact* ptr){	// updating emails
+		
+	FILE *file_update = fopen("emails.txt","w");
+	
+	if(file_update==NULL){
+		printf("File emails.txt cannot be opened"); exit(0);
+	}
+	while(ptr!=0){
+		fprintf(file_update,"%s",ptr->name); ptr=ptr->next; }
+		
+	fclose(file_update);
+}
+
+void update_numbers(struct contact* ptr)  // updating phone numbers
+{		
+	FILE *file_update = fopen("phone_no.txt","w");
+	if(file_update==NULL){
+		printf("File emails.txt cannot be opened"); exit(0);
+	}
+	
+	while(ptr!=0);
+	{
+		fprintf(file_update,"%d",ptr->name); ptr=ptr->next;
+	}
+	fclose(file_update);
+}
+
+
+void insert(struct contact* head, struct contact* last){
+	struct contact* ptr = head;
+	struct contact* info = (struct contact*)malloc(sizeof(struct contact));
+	info->next=0;
+	printf("Enter your name : ");
+	fgets(info->name,50,stdin);
+	printf("Enter your email address : ");
+	scanf("%s",info->email);
+	printf("Enter your phone number : ");
+	scanf("%n",&info->phone_no);
+	
+	if(head!=0)
+	{
+		if(strcmp(info->name,head->name)==-1)  // insert at front
+		{
+			info->next=head;
+			head=info;
+		}
+		
+		else if(strcmp(info->name,last->name)==1 || strcmp(info->name,last->name)==0) // insert at end
+		{ 
+			last->next=info;
+		}
+		
+		else{
+			while(ptr!=0){
+				if(ptr->next!=0 && strcmp(info->name,ptr->name)==-1 && strcmp(info->name,ptr->next->name)==1) // meaning (ptr->name) < (info->name) < (ptr->next->name)
+				{
+					info->next=ptr->next;  ptr->next = info;
+				}
+				
+				ptr = ptr->next;
+			}
+		}
+	}
+	else // if contact list or file is empty...
+	{
+		head = info; }
+		
+	update_names(head); update_emails(head); update_numbers(head);
+}
+
+
 int main()
 {
 	FILE *file_read = fopen("contact_names.txt","r");
 	if(file_read==NULL){
-		printf("File Can't be opened #0");
+		printf("File contact_names.txt can't be opened");
 		exit(0);
 	}
 	
@@ -50,13 +122,13 @@ int main()
       if(ch=='\n')
          size++;
    	}
-   	
    	fclose(file_read);
    	
-   	//extracting info from file
+   	//extracting contact names from file
+   	
    	FILE *fo1 = fopen("contact_names.txt","r");
    	if(fo1==NULL){
-		printf("File can't be opened#1"); exit(0);
+		printf("File contact_names.txt can't be opened"); exit(0);
 	}
    	printf("Size : %d\n\n",size+1); int i;
    	
@@ -76,46 +148,39 @@ int main()
 			ptr=newnode;
 		}
 	}
-	//display(head);
+	
 	last=ptr;
 	fclose(fo1);
 	
-	printf("Reached file fu\n");
-		
-	FILE *fu = fopen("emails.txt","r");
-	printf("Reached after file fu opened\n");
+	// Extracting emails from emails file into linked list
 	
+	FILE *fu = fopen("emails.txt","r");
 	if(fu==NULL){
-		printf("File can't be opened#2");
+		printf("File emails.txt can't be opened");
 		exit(0);
 	}
-	printf("Reached after if condition of fu\n");
 	ptr=head;
-	printf("Reached after ptr=head\n");
 	while(ptr!=0){
 		fscanf(fu,"%s",ptr->email);
 		ptr=ptr->next;
 	}
-	printf("Reached after while loop #1\n");
 	fclose(fu);
-		
 	
+	// Extracting phone numbers from phone_no file into linked list
+		
 	FILE *file_phone = fopen("phone_no.txt","r");
 	if(file_phone==NULL)
 	{
-		printf("File can't be opened #3");
+		printf("File phone_no.txt can't be opened");
 		exit(0);
 	}
 	ptr=head;
-	printf("Reached before while loop #2\n");
 	while(ptr!=0)
 	{
-		printf("Hi there\n");
 		fscanf(file_phone,"%lf",&ptr->phone_no);
-		printf("Accepted\n");
 		ptr=ptr->next;
 	}
-	printf("Reached after while loop #2\n");
-	display(head);
+	//display(head);
 	fclose(file_phone);
+	
 }
