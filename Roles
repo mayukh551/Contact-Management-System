@@ -4,7 +4,6 @@ Abesh:
 3. Search function
 
 Mayukh:
-1. Extract existing information from file.txt and put them into arrays
+1. Extract existing information from file.txt and put them into linked list
 2. Store new changes into file.txt from the array
 3. Insert function,  Delete function
-4. Search function
