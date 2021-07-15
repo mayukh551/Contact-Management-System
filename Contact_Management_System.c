@@ -2,6 +2,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+//  Status
+//  Options() : Success
+//  insert()  : Success ... Extra task : check if inputs are valid --> number
+//  del()     : Success
+//  update()  : Success
+//  search()  : Not done
+//  edit()    : Not done
+
+struct contact *head, *last;  int size;
 
 struct contact{
 	char name[50];  // to store the name of a person
@@ -10,97 +19,239 @@ struct contact{
 	struct contact *next;  // to store the MA of next node
 };
 
-void display(struct contact *ptr){
-	while(ptr!=0){
-		printf("Name     : %s",ptr->name);
-		printf("Email ID : %s\n", ptr->email);
-		printf("Phone_No : %.0lf\n",ptr->phone_no);
-		printf("\n");
-		ptr=ptr->next;
+void display()
+{
+	if(head!=0)
+	{
+		struct contact *ptr=head;
+		int i=1;
+		printf("\nTotal Contacts : %d\n",size);
+		while(ptr!=0)
+		{
+			printf("%d.  Name     : ",i);
+			puts(ptr->name);
+			printf("     Phone No : %.0lf\n",ptr->phone_no);
+			printf("     Email ID : %s\n", ptr->email);
+			printf("\n");
+			ptr=ptr->next; i++;
+		}
 	}
+	
+	else
+	{
+		printf("Contact List Empty\n");
+	}
+	
 }
 
 void update_names(struct contact* ptr)       // updating contact names
 {	
-	FILE *file_update = fopen("contact_names.txt","w");
+	FILE *name_update = fopen("contact_names.txt","w");
 	
-	if(file_update==NULL){
+	if(name_update==NULL){
 		printf("File contact_names.txt cannot be opened"); exit(0);
 	}
 	while(ptr!=0){
-		fputs(ptr->name,file_update); ptr=ptr->next;}
+		fputs(ptr->name,name_update); ptr=ptr->next;}
 		
-	fclose(file_update);
+	fclose(name_update);
+	printf("\nContact Names updated\n");
 }
-
+ 
 void update_emails(struct contact* ptr){	// updating emails
 		
-	FILE *file_update = fopen("emails.txt","w");
+	FILE *emails_update = fopen("emails.txt","w");
 	
-	if(file_update==NULL){
+	if(emails_update==NULL){
 		printf("File emails.txt cannot be opened"); exit(0);
 	}
 	while(ptr!=0){
-		fprintf(file_update,"%s",ptr->name); ptr=ptr->next; }
-		
-	fclose(file_update);
+		fprintf(emails_update,"%s\n",ptr->email); ptr=ptr->next; }
+	
+	fclose(emails_update);
+	printf("\nEmail ids updated\n");
+	
 }
 
 void update_numbers(struct contact* ptr)  // updating phone numbers
 {		
-	FILE *file_update = fopen("phone_no.txt","w");
-	if(file_update==NULL){
-		printf("File emails.txt cannot be opened"); exit(0);
+	FILE *no_update = fopen("phone_no.txt","w");
+	if(no_update==NULL){
+		printf("File phone_no.txt cannot be opened"); exit(0);
 	}
-	
-	while(ptr!=0);
+	//printf("Entering while loop of update_numebrs()\n");
+	while(ptr!=0)
 	{
-		fprintf(file_update,"%d",ptr->name); ptr=ptr->next;
+		fprintf(no_update,"%lf\n",ptr->phone_no); ptr=ptr->next;
 	}
-	fclose(file_update);
+	fclose(no_update);
+	printf("\nPhone numbers updated\n");
 }
 
+ 
+void insert(){	
 
-void insert(struct contact* head, struct contact* last){
-	struct contact* ptr = head;
+	struct contact* ptr = head; char pass[50]; double num; char email[50];
 	struct contact* info = (struct contact*)malloc(sizeof(struct contact));
+	double *d = &(info->phone_no);
 	info->next=0;
+	do{
+		printf("Enter your phone number : ");
+		scanf("%lf",&num); 
+		if(num==0){
+			printf("\nNot a Number... Try Again!!!\n"); num=0;
+		}
+		else{
+			*d =  num; break;
+		}
+	}while(num!=0);
+		
 	printf("Enter your name : ");
+	fgets(info->name,50,stdin);
 	fgets(info->name,50,stdin);
 	printf("Enter your email address : ");
 	scanf("%s",info->email);
-	printf("Enter your phone number : ");
-	scanf("%n",&info->phone_no);
+	
+	//strcpy(info->name,pass); strcpy(info->email,email); info->phone_no=num;
 	
 	if(head!=0)
 	{
-		if(strcmp(info->name,head->name)==-1)  // insert at front
+		if(strcmp(info->name,head->name)<0)  // insert at front
 		{
 			info->next=head;
 			head=info;
 		}
 		
-		else if(strcmp(info->name,last->name)==1 || strcmp(info->name,last->name)==0) // insert at end
-		{ 
+		/*else if(strcmp(info->name,last->name)>0) // insert at end
+		{
 			last->next=info;
+		}*/
+		
+		//else{   // insert between two nodes
+		while(ptr!=0){
+			
+			if(ptr->next==0)
+			{
+				if(strcmp(info->name,ptr->name)>0) // insert at end
+				{
+					ptr->next=info;
+				}
+			}
+			
+			 // meaning (ptr->name) < (info->name) < (ptr->next->name)
+			else if(ptr->next!=0 && strcmp(info->name,ptr->name)>0 && strcmp(info->name,ptr->next->name)<0)
+			{
+				info->next=ptr->next;  ptr->next = info;
+			}
+			
+			ptr = ptr->next;
+		}
+	}
+	
+	else // if contact list or file is empty...
+	{
+		head = last = info; }
+		
+	printf("\nNew Contact Added\n\n");
+	//display(head);
+	size=size+1;
+}
+
+
+void del(){				
+	struct contact *ptr=head;
+	display();
+	printf("\nTotal contacts : %d\n",size);
+	printf("\nEnter the no. of contacts you want to delete : ");	int n;
+	scanf("%d",&n);
+	if(n>=size)
+	{
+		head=0; size=0;
+		printf("Are you sure you want to delete all existing contacts?\n");
+		printf("Y/y --> Yes\n");
+		printf("N/n --> No\n");
+		printf("All contacts Deleted\n");
+	}
+	else if(n>0 && n<size)
+	{
+		printf("Enter the no. preceding the contact you want to delete :\n");
+		int choice[n]; int i,j;
+		for(i=0;i<n;i++)
+		{
+			scanf("%d",&choice[i]);
+		}
+		i=1,j=0;
+		//sort(choice);  // sorting the elements in array 
+		while(i<=size && j<n)
+		{
+			if(i==choice[j]){
+				head=ptr->next; j++; ptr=head;	
+				//free(ptr); 
+			}
+						
+			else if((i+1)==choice[j]){
+				struct contact *nx=ptr->next;
+				ptr->next=nx->next; j++;		
+			}	
+			else
+				ptr=ptr->next;		
+			
+			i++;
+			
+		}
+		size=size-n;
+		printf("\nChosen contacts deleted\n");
+		printf("\nTotal Contacts after deletion : %d\n",size);
+	}
+	  
+}
+
+void options(){     
+	
+	int ch=0;
+	
+	while(ch>=0){
+		
+		printf("\n\n\nThis is a Contact Management System\n");
+		printf("A System to manage your contacts for you by providing you with the following \nfunctions : \n\n");
+		printf("Press 1 -> To add a new contact\n");
+		printf("Press 2 -> To edit an existing contact\n");
+		printf("Press 3 -> To del one or more contacts\n");
+		printf("Press 4 -> To search your existing contacts\n");
+		printf("Press 5 -> To print all available contacts\n");
+		printf("Press 0 -> To exit the application\n");
+		printf("\nEnter your choice : ");  
+		scanf("%d",&ch);
+		printf("\n");
+		if(ch==1)
+			insert();
+			
+		/*else if(ch==2)
+			edit();*/
+			
+		else if(ch==3)
+			del();
+			
+		/*else if(ch==4)
+			search();*/
+			
+		else if(ch==5)
+			display();
+			
+		else if(ch==0){
+			printf("\nThank You");
+			update_names(head); 
+			update_emails(head);				
+			update_numbers(head);
+			exit(0);
 		}
 		
 		else{
-			while(ptr!=0){
-				if(ptr->next!=0 && strcmp(info->name,ptr->name)==-1 && strcmp(info->name,ptr->next->name)==1) // meaning (ptr->name) < (info->name) < (ptr->next->name)
-				{
-					info->next=ptr->next;  ptr->next = info;
-				}
-				
-				ptr = ptr->next;
-			}
+			printf("\nInvalid Input\n");
+			ch=0;	
 		}
-	}
-	else // if contact list or file is empty...
-	{
-		head = info; }
-		
-	update_names(head); update_emails(head); update_numbers(head);
+				
+	}	
 }
 
 
@@ -113,8 +264,8 @@ int main()
 	}
 	
 	// counting no. of lines in file
-	int size=0;
-	struct contact *head,*ptr,*last,*newnode;
+	size=0;
+	struct contact *ptr,*newnode;
 	head=0;
 	char ch;
 	while((ch=fgetc(file_read))!=EOF)
@@ -130,9 +281,10 @@ int main()
    	if(fo1==NULL){
 		printf("File contact_names.txt can't be opened"); exit(0);
 	}
-   	printf("Size : %d\n\n",size+1); int i;
+   	printf("Size : %d\n\n",size+1); int i; 
+	size=size+1;
    	
-	for(i=0;i<(size+1);i++)
+	for(i=0;i<(size);i++)
 	{
 		newnode=(struct contact*)malloc(sizeof(struct contact));
 		double num;
@@ -152,6 +304,7 @@ int main()
 	last=ptr;
 	fclose(fo1);
 	
+	
 	// Extracting emails from emails file into linked list
 	
 	FILE *fu = fopen("emails.txt","r");
@@ -166,8 +319,9 @@ int main()
 	}
 	fclose(fu);
 	
+	
 	// Extracting phone numbers from phone_no file into linked list
-		
+	
 	FILE *file_phone = fopen("phone_no.txt","r");
 	if(file_phone==NULL)
 	{
@@ -180,7 +334,7 @@ int main()
 		fscanf(file_phone,"%lf",&ptr->phone_no);
 		ptr=ptr->next;
 	}
-	//display(head);
+	display();
 	fclose(file_phone);
-	
+	options();
 }
