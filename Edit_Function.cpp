@@ -4,8 +4,8 @@ void edit()
 	do
 	{
 		printf("\n Which way do you want to search ?\n");
-		printf("Press 1 -> Edit By Name\n");
-		printf("Press 2 -> Edit By Number\n");
+		printf("Press 1 -> Search By Name\n");
+		printf("Press 2 -> Search By Number\n");
 		printf("Press 3 -> Exit\n");
 		scanf("%d", &ch);
 		
@@ -29,7 +29,7 @@ int editByName()
 {
 	struct contact* ptr = head;
 	
-	if(ptr == NULL)  
+	if(head == 0)  
     {  
         printf("\nContact is Empty!\n");  
     }  
