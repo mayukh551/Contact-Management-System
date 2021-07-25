@@ -148,6 +148,11 @@ void searchByAlphabets()
 				lb = lb->next;
 			}
 		}
+		
+		else
+		{
+			printf ("\nSearch Unsuccessful!\n");
+		}
     }
 }
 
