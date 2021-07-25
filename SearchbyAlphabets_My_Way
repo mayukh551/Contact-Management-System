@@ -1,0 +1,71 @@
+void searchByAlphabets()
+{
+	struct contact* ptr = head; int i;
+	
+	if(ptr == 0)  
+    {  
+        printf("\nContact is Empty!\n");  
+    }  
+    
+    else
+    {
+		char str[50];
+		printf("\nEnter the name or the first few alphabets of the conatct which you want to search : ");
+		fgets(str,50,stdin); 
+		fgets(str,50,stdin); 
+		int x=strlen(str)-1;    // used x for storing size, because size name globally declared variable already used 
+		printf("size of str : %d\n",x);
+		
+		struct contact *lb = head;
+    		
+		lb = lowerBoundary(lb, str);
+		
+		int k=0; // a flag value to check if any contact name with str in it is found
+		
+		if(lb!=0)
+		{
+			printf("Lower boundary found\n");
+			puts(lb->name);
+			ptr=lb; // pointing to starting position of contacts starting with str[0]
+						
+			while(ptr->name[0]==str[0])  // ub set to when str[0]!=ptr->name[0] or End of File reached
+			{
+				int c=0;
+				printf("\nComparing %s with %s",str,ptr->name);
+				for(i=0;i<x;i++)      // i processing through each character of str and ptr->name
+				{
+					
+					// comparing each character of str with that of ptr->name
+					
+					if(str[i]!=ptr->name[i])  
+					{
+						c=-1; break; // comes out of loop when str is not in ptr->name
+					}
+					else
+						c++; // counting the no. of times str[i]==ptr->name[i]
+				}
+				if(c==x)  // if every character of str is present in ptr->name
+				{
+					printf("\nContact found\n");
+					printf("\n%s",ptr->name);
+					printf("%s\n",ptr->email);
+					printf("%s\n",ptr->phone_no);
+					printf("\n\n");
+					k=1; // contact found signal
+				}
+				else{
+					printf("Not matched\n Moving to next contact\n");
+				}
+				ptr=ptr->next; // moves to next contact
+				
+				if(ptr==0)  // if last contact visited...
+					break;
+			}
+		}
+		
+		if(k==0)
+		{
+			printf ("\nNo such contact(s) found!\n");
+		}
+    }
+}
