@@ -52,8 +52,9 @@ void update_names(struct contact* ptr)       // updating contact names
 		printf("File contact_names.txt cannot be opened"); exit(0);
 	}
 	while(ptr!=0){
-		fputs(ptr->name,name_update); ptr=ptr->next;}
-		
+		fprintf(name_update,"%s",ptr->name);
+		ptr=ptr->next;
+	}
 	fclose(name_update);
 	printf("\nContact Names updated\n");
 }
@@ -281,8 +282,8 @@ int main()
    	if(fo1==NULL){
 		printf("File contact_names.txt can't be opened"); exit(0);
 	}
-   	printf("Size : %d\n\n",size+1); int i; 
-	size=size+1;
+   	printf("Size : %d\n\n",size); int i; 
+	size=size;
    	
 	for(i=0;i<(size);i++)
 	{
@@ -300,10 +301,19 @@ int main()
 			ptr=newnode;
 		}
 	}
+	/*
+	int c =fgetc(fo1);
+	if(c==EOF){
+		printf("End of file | @%c@\n",c);
 	
+		int x=ftell(fo1);
+		fseek(fo1,x-3,SEEK_SET); // pointer pointing to the last character just before the end of file
+		c=fgetc(fo1);
+		printf("@%c@",c);
+	}*/
+
 	last=ptr;
 	fclose(fo1);
-	
 	
 	// Extracting emails from emails file into linked list
 	
