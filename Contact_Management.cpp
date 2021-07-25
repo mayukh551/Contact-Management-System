@@ -289,7 +289,7 @@ struct contact * upperBoundary (struct contact* lb, struct contact* ub, char str
 		return 0;
 	}
 	
-	else  //From here...
+	else  //FROM HERE...
 	{
 		while (ptr != ub->next)
 		{
@@ -312,7 +312,7 @@ struct contact * upperBoundary (struct contact* lb, struct contact* ub, char str
     		p = p->next;
 		}
 		return 0;
-	} //...Till
+	} //...TILL
 	
 	
 	
