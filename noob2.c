@@ -9,10 +9,10 @@
 //  insert()  		: Success ... Extra task : check if inputs are valid --> Name and number
 //  del()    		: Success
 //  update()  		: All details successfully updated
-//  update_stats()  : 
-//  search()     	: 
-//	edit()			: 
-//  fav_disp()	 	:
+//  update_stats()  : #3
+//  search()     	: All done except search by Number
+//	edit()			: #1
+//  fav_disp()	 	: #2
 
 struct contact{
 	char name[50];  // to store the first name of a person
@@ -28,8 +28,8 @@ int size,counter;
 
 void options(), display(),disp(struct contact* ptr), fav(); 
 int search();
-struct contact* searchByAlphabets(char str[50]);
-struct contact* searchByNumber();
+int searchByAlphabets(char str[50]);
+int searchByNumber();
 struct contact* searchByName(char str[50]);
 
 
@@ -121,9 +121,13 @@ void insert()
 	info->next=0;
 	
 	// Accepting details of the contact 
-	
+	printf("Enter the contact details :\n\n");
 	printf("Phone number : ");
-	scanf("%s",info->phone_no); 
+	scanf("%s",info->phone_no);
+	if(strlen(info->phone_no)<10){
+		printf("Invalid Phone Number\nTry Again!!\n");
+		insert();
+	}
 	printf("Name : ");
 	fgets(info->name,50,stdin);
 	fgets(info->name,50,stdin);
@@ -134,8 +138,13 @@ void insert()
 		free(info);
 		options();
 	}
-	printf("Email address : ");
+	printf("Email address (Optional) \nOr press E to skip: ");
 	scanf("%s",info->email);
+	
+	if(info->email[0]=='E' || info->email[0]=='e')   // a condition if a user do not want to store the email address
+	{  
+		strcpy(info->email,"N/A");
+	}
 	
 	last_inserted=info;
 	
@@ -258,34 +267,45 @@ struct contact* searchByName(char str[50])
 }
 
 
-struct contact * searchByNumber()
+int searchByNumber(char str[10])
 {
-	struct contact *ptr = head;
 	
+	struct contact *ptr = head; int i=0,k=0;
+	int x=strlen(str)-1;
     char num[10];
-    printf("\nEnter the number of the contact which you want to search : ");
-    scanf ("%s", num);
+    /*printf("\nEnter the number of the contact which you want to search : ");
+    scanf ("%s", num);*/
     	
     while (ptr!=0)  
 	{
-		if (strcmp(num,ptr->phone_no)==0)  // if num == ptr->phone_no
+		int c=0;
+		for(i=0;i<x;i++)      // i processing through each character of str and ptr->phone_no
 		{
-			return ptr;
+			// comparing each character of str with that of ptr->phone_no
+			if(str[i]!=ptr->phone_no[i])
+			{
+				c=-1; break; // comes out of loop when str is not in ptr->phone_no
+			}
+			else
+				c++; // counting the no. of times str[i]==ptr->phone_no[i]
+		}
+		if(c==x)  // if every character of str is present in ptr->phone_no
+		{
+			disp(ptr); k=1;
 		}
 		
-		else
-		{
-			ptr = ptr->next;
-		}
+		ptr=ptr->next; // moves to next contact
 	}
-	return 0;
+	
+    return k;
 }
 
 
 
-struct contact* searchByAlphabets(char str[50])
+int searchByAlphabets(char str[50])
 {
 	struct contact* ptr = head; int i;
+	int k=0; // a flag value to check if any contact name with str in it is found
 	
 	if(ptr == 0)  
     {  
@@ -294,10 +314,6 @@ struct contact* searchByAlphabets(char str[50])
     
     else
     {
-		/*char str[50];
-		printf("\nEnter the name or the first few alphabets of the conatct which you want to search : ");
-		fgets(str,50,stdin);
-		fgets(str,50,stdin);*/ 
 		int x=strlen(str)-1;    // used x for storing size, because size name globally declared variable already used 
 		printf("size of str : %d\n",x);
 		
@@ -311,19 +327,16 @@ struct contact* searchByAlphabets(char str[50])
 		    while (ptr!=0)
 		    {
 		    	if (str[0] == ptr->name[0])
-		    	{
 		    		return ptr;
-				}		
-		    			
+		    		
 		    	ptr = ptr->next;
 			}
 			return 0;
-		
 		}
     		
 		lb = lowerBoundary(lb, str);
 		
-		int k=0; // a flag value to check if any contact name with str in it is found
+		
 		
 		if(lb!=0)
 		{
@@ -349,13 +362,8 @@ struct contact* searchByAlphabets(char str[50])
 				}
 				if(c==x)  // if every character of str is present in ptr->name
 				{
-					/*printf("\nSearch Successful!\n\n");
-					printf("\n%s",ptr->name);
-					printf("%s\n",ptr->email);
-					printf("%s\n",ptr->phone_no);
-					printf("\n\n");
-					k=1; // contact found signal*/
-					return ptr;
+					disp(ptr);
+					k=1;
 				}
 				else{
 					printf("Not matched\n Moving to next contact\n");
@@ -366,22 +374,16 @@ struct contact* searchByAlphabets(char str[50])
 					break;
 			}
 		}
-		
 		/*if(k==0)
-		{
-			printf ("\nSearch Unsuccessful!\n"); return 0;
-		}*/
-		
+			printf("Search Unsuccessful!\n\n");*/
     }
-    
-    return 0;
-    
+    return k;
 }
 
 int search()
 {
 	
-	int ch=0; struct contact *ptr = 0;
+	int ch=0; struct contact *ptr = 0; int k=0;
 	
 	if (head==0)
 	{
@@ -389,7 +391,7 @@ int search()
 	}
 	else
 	{
-		do
+		/*do
 		{
 			printf("\n Which way do you want to search ?\n");
 			printf("Press 1 -> Search By Name\n");
@@ -398,52 +400,69 @@ int search()
 			printf("Press 4 -> Exit\n");
 			printf ("\nYour choice : ");
 			scanf("%d", &ch);
-			//int ch=getch(); ch=ch-48;
+			
 			printf("%d\n",ch);
 			if (ch!=1 && ch!=2 && ch!=3 && ch!=4)
 				printf ("\nInvalid choice! Try Again...\n");
 			
-		}while(ch!=1 && ch!=2 && ch!=3 && ch!=4);
+		}while(ch!=1 && ch!=2 && ch!=3 && ch!=4);*/
 	
 		/*if (ch==1)
 		{
 			ptr = searchByName();
 		}*/
 		
-		if(ch==4)
-			options();
+		/*if(ch==4)
+			options();*/
 		
 		char str[50];
-		printf("\nEnter the name or the first few alphabets of the conatct which you want to search : ");
-		fgets(str,50,stdin); 
+		printf("\nEnter the name or number you want to search or Press 4 to exit : ");
+		fgets(str,50,stdin); // fgets(str,50,stdin);
+		int i,k=0,check_int=1;
+		printf("size in search() is %d\n",strlen(str));
+		for(i=0;i<strlen(str)-1;i++)
+		{
+			if(str[i]<48 && str[i]>57)
+			{
+				check_int=0; // means it has an alphabet
+				break;
+			}
+		}
+		
+		if(str[0]=='4'){
+			options();
+		}
+		
+		if(check_int==1)
+		{
+			printf("Numebr searach\n");
+			k = searchByNumber(str);
+		}
 	
-		if (ch==2)
+		/*if (ch==2)
 		{
 			ptr = searchByNumber();
-		} 
+		}*/
 	
-		else if (ch==1)   
+		else if (check_int==0)   
 		{
-			ptr=searchByAlphabets(str);   // checks every character of the input if present in the contact list
+			printf("Name Search\n");
+			k=searchByAlphabets(str);   // checks every character of the input if present in the contact list
 		}
 	
-		if ((ch==2 || ch==1) && (ptr!=0))
+		if ((check_int==1 || check_int==0) && (k==1))
 		{
-			/*printf ("\nSearch Successful!\n\n");
-			printf("     Name     : %s",ptr->name);
-			//puts(ptr->name);
-			printf("     Phone No : %s\n",ptr->phone_no);
-			printf("     Email ID : %s\n", ptr->email);*/
-			disp(ptr);
+			//disp(ptr);
 			printf("\n");
 			return 1;
-		
 		}
-		else if ((ch==2 || ch==1) && (ptr==0))
+		
+		else if ((check_int==1 || check_int==0) && (k==0))
 		{
 			printf ("\nSearch Unsuccessful!\n");
 			return 0;
 		}
+		
 	}
 }
 
@@ -471,8 +490,9 @@ void options(){
 		printf("Press 3 -> To del one or more contacts\n");
 		printf("Press 4 -> To search your existing contacts\n");
 		printf("Press 5 -> To print all available contacts\n");
-		printf("Press 7 -> To mark your favourite contacts\n");
-		printf("Press 6 -> To view stats\n");
+		//printf("Press 7 -> To mark your favourite contacts\n");
+		//printf("Press 6 -> To view stats\n");
+		printf("Press s -> to clear screen\n");
 		printf("Press 0 -> To exit the application\n");
 		//printf("\nEnter your choice : ");
 		//scanf("%d",&ch);
@@ -490,12 +510,16 @@ void options(){
 		else if(ch==(48+4)){
 			int f=search();		
 		}
-				
+		
 		else if(ch==(48+5))
 			display();
 			
 		//else if(ch==(48+6))
 			//mark_fav_contact(head);
+			
+		else if(ch==115 || ch==83){
+			system("cls");
+		}
 			
 		else if(ch==48){
 			do{
@@ -584,7 +608,7 @@ int main()
 	printf("A System to manage your contacts for you by providing you with the following \nfunctions : \n\n");
 	printf("Press any key to continue : ");
 	getch();
-	fav_disp(head);
+	//fav_disp(head);
 	options();
 	//display();
 	
