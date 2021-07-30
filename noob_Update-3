@@ -387,18 +387,15 @@ int searchByAlphabets(char str[50])
 			printf("Lower boundary found\n");
 			puts(lb->name);
 			ptr=lb; // pointing to starting position of contacts starting with str[0]
-						
-			while(ptr->name[0]==str[0])  // ub set to when str[0]!=ptr->name[0] or End of File reached
+			while(tolower(ptr->name[0])==tolower(str[0]))  // ub set to when str[0]!=ptr->name[0] or End of File reached
 			{
 				int c=0;
 				printf("\nComparing %s with %s",str,ptr->name);
 				for(i=0;i<x;i++)      // i processing through each character of str and ptr->name
 				{
-					
 					// comparing each character of str with that of ptr->name
-					str[i]=tolower(str[i]); ptr->name[i]=tolower(ptr->name[i]);
-					
-					if(str[i]!=ptr->name[i])
+		
+					if(tolower(ptr->name[i])!=tolower(str[i]))
 					{
 						c=-1; break; // comes out of loop when str is not in ptr->name
 					}
@@ -410,7 +407,8 @@ int searchByAlphabets(char str[50])
 					disp(ptr);
 					k=1;
 				}
-				else{
+				else
+				{
 					printf("Not matched\n Moving to next contact\n");
 				}
 				ptr=ptr->next; // moves to next contact
@@ -497,7 +495,7 @@ void search()
 
 void edit(){
 	
-	// accept the contact that the user wants to delete...
+	// accept the contact that the user wants to edit...
 	
 	// make the necessary changes in the contact as suggested by the user
 	
