@@ -1,11 +1,12 @@
 void edit()
 {
+	
 	// accept the contact that the user wants to edit...
 	int ch=0; struct contact *ptr = head; struct contact *prev = head; int k=0;
 	int check_int=1;
-	if (head==0)
+	if (ptr==0)
 	{
-		empty_message();
+		printf ("\nContact List is Empty!\n");
 	}
 	else
 	{
@@ -17,7 +18,7 @@ void edit()
 			scanf ("%d", &choice);
 			
 			if (choice<1 || choice>size)
-				empty_message();
+				printf ("\nChoose the no. from the list!\n\n");
 				
 		}while (choice<1 || choice>size);
 		
@@ -27,11 +28,11 @@ void edit()
 		{	
 			if (i==choice)
 				break;
+
+			ptr = ptr->next;
 				
 			if (ptr!=head)
 				prev = prev->next;
-				
-			ptr = ptr->next;
 		}
 		
 		// make the necessary changes in the contact as suggested by the user
@@ -49,10 +50,10 @@ void edit()
 				printf("\n");
 				ch=getch();
 			
-				if (ch!=(48+1) || ch!=(48+2) || ch!=(48+3) || ch!=(48))
+				if (ch!=(48+1) && ch!=(48+2) && ch!=(48+3) && ch!=(48))
 					printf ("\nInvalid choice! Try Agian...\n");
 				
-			}while (ch!=(48+1) || ch!=(48+2) || ch!=(48+3) || ch!=(48));
+			}while (ch!=(48+1) && ch!=(48+2) && ch!=(48+3) && ch!=(48));
 		
 			// then the node before ptr (say prev) ; prev->next=ptr->next; 	
 			// ptr is extracted from linked list
@@ -71,16 +72,29 @@ void edit()
 					prev->next = ptr->next;
 					
 				free(ptr);
+				struct contact *p = 0;
 				
-				printf ("\nEnter the edited name :\n");
-				printf("\nName : ");
-				fflush(stdin);
-				scanf ("%[^\t\n]s", info->name);
-				
+				void name_change()
+				{
+					printf ("\nEnter the edited name :\n");
+					printf("\nName : ");
+					fflush(stdin);
+					scanf ("%[^\t\n]s", info->name);
+
+					p=searchByName(info->name);
+					if(p!=0)
+					{
+  						printf("This Contact matches with %s",info->name);
+						disp(p);
+ 						printf("Contact Already Available\nTry Again...\n");
+  						//free(info);
+ 						name_change();
+					}
+				}
+				name_change();
 				// insertion_sort(ptr);  // passed for insertion into LL by sorting
 				insertion_sort(info);
 				printf ("\n\nContact Edited!\n\n");
-				
 			}
 			
 			else if (ch==(48+2))
@@ -91,14 +105,13 @@ void edit()
 				{
 					printf ("\nEnter the edited phone no. :\n");
 					printf ("\nPhone no. : ");
-					scanf ("%s", ptr->phone_no);
+					scanf ("%s", str);
 				
 					if(strlen(ptr->phone_no)<10)
 					{
 						printf("Invalid Phone Number\nTry Again!!\n");
 						phone_number();
 					}
-					strcpy(str,ptr->phone_no);
 	
 					// to check if phone_no has only digits
 	
@@ -113,13 +126,16 @@ void edit()
 	
 					// to check if phone no. is already available or not...
 	
-					int k=searchByNumber(ptr->phone_no);
+					int k=searchByNumber(str);
 					if(k==1)
 					{
 						printf("Contact Already Available!!\n");
 						phone_number();
 					}
 				}
+				phone_number();
+				strcpy(ptr->phone_no, str);
+				printf ("\n\nContact Edited!\n\n");
 			}
 			
 			else if (ch==(48+3))
@@ -127,6 +143,7 @@ void edit()
 				printf ("\nEnter the edited E-mail ID:\n");
 				printf ("\nE-mail : ");
 				scanf ("%s", ptr->email);
+				printf ("\n\nContact Edited!\n\n");
 			}
 			
 			else if (ch==(48))
@@ -136,30 +153,32 @@ void edit()
 			do
 			{
 				printf ("\nDo you want to continue editing this contact ?\nY/N : ");
+				fflush(stdin);
 				scanf ("%c", &ch1);
 				
-				if (ch1!='Y' || ch1!='y' || ch1!='N' || ch1!='n')
+				if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
 					printf ("\nInvalid choice! Try Again...\n");
 				
 			}
-			while (ch1!='Y' || ch1!='y' || ch1!='N' || ch1!='n');
+			while (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n');
 			
 			if (ch1=='Y' || ch1=='y')
 				edit_again();
 				
-			else if (ch1=='N' || ch=='n')
+			else if (ch1=='N' || ch1=='n')
 			{
 				char ch2;
 				do
 				{
 					printf ("\nDo you want to edit another contact ?\nY/N : ");
+					fflush(stdin);
 					scanf ("%c", &ch2);
 				
-					if (ch2!='Y' || ch2!='y' || ch2!='N' || ch2!='n')
+					if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
 						printf ("\nInvalid choice! Try Again...\n");
 				
 				}
-				while (ch2!='Y' || ch2!='y' || ch2!='N' || ch2!='n');
+				while (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n');
 				
 				if (ch2=='Y' || ch2=='y')
 					edit();
@@ -168,6 +187,6 @@ void edit()
 					options();
 			}	
 		}
-		edit_again();   // Corrected Line
+		edit_again();
 	}
 }
