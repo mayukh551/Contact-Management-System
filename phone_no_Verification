@@ -1,0 +1,44 @@
+// phone size should be exactly = 10
+	
+	if(strlen(info->phone_no)<10)
+	{
+		printf("Invalid Phone Number\nTry Again!!\n");
+		insert();
+	}
+	strcpy(str,info->phone_no);
+	
+	// to check if phone_no has only digits
+	
+	for(i=0;i<strlen(str);i++)
+	{
+		if(str[i]<48 || str[i]>57)
+		{
+			printf("Invalid Phone Number\nTry Again!!\n"); // means it is not a phone number
+			insert();
+		}
+	}
+	
+	// to check if phone no. is already available or not...
+	
+	int k=searchByNumber(info->phone_no);
+	if(k==1){
+		printf("Contact Already Available!!\n");
+		//disp(info);
+		do{
+			printf("\nDo want to edit this contact? -> Y/N\n");
+			fflush(stdin);
+			choice = getch();
+			if(choice!=(89) && choice!=(89+32) && choice!=(110) && choice!=(110-32))
+				error_message();
+		}
+		while(choice!=(89) && choice!=(89+32) && choice!=(110) && choice!=(110-32));
+		if(choice=='Y' || choice=='y'){
+			edit(); options();
+		}
+			
+		else{
+			free(info);
+			options();
+		}
+			
+	}
