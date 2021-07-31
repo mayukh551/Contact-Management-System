@@ -1,12 +1,11 @@
 void edit()
 {
-	
 	// accept the contact that the user wants to edit...
 	int ch=0; struct contact *ptr = head; struct contact *prev = head; int k=0;
 	int check_int=1;
-	if (ptr==0)
+	if (head==0)
 	{
-		printf ("\nContact List is Empty!\n");
+		empty_message();
 	}
 	else
 	{
@@ -18,7 +17,7 @@ void edit()
 			scanf ("%d", &choice);
 			
 			if (choice<1 || choice>size)
-				printf ("\nChoose the no. from the list!\n\n");
+				empty_message();
 				
 		}while (choice<1 || choice>size);
 		
@@ -26,13 +25,13 @@ void edit()
 		
 		for (i=1;i<=choice;i++)
 		{	
-			ptr = ptr->next;
-			
 			if (i==choice)
 				break;
 				
 			if (ptr!=head)
 				prev = prev->next;
+				
+			ptr = ptr->next;
 		}
 		
 		// make the necessary changes in the contact as suggested by the user
@@ -169,5 +168,6 @@ void edit()
 					options();
 			}	
 		}
+		edit_again();   // Corrected Line
 	}
 }
