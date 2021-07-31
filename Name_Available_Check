@@ -1,0 +1,8 @@
+ptr=searchByName(info->name);
+if(ptr!=0){
+  printf("This Contact matches with %s",info->name);
+  disp(ptr);
+  printf("Contact Already Available\n");
+  free(info);
+  options();
+}
