@@ -33,6 +33,7 @@ void search(), edit(), error_message(),empty_message();
 int searchByAlphabets(char str[50]);
 int searchByNumber();
 struct contact* searchByName(char str[50]);
+void edit_again(struct contact* ptr, struct contact* prev);
 void insertion_sort(struct contact* ptr);
 
 
@@ -57,33 +58,6 @@ void disp(struct contact* ptr)    //to print a specific contact
 	}
 }
 
-/*void fav_disp(struct contact* ptr){
-	
-	while(ptr!=0)
-	{
-		if(ptr->favourites==1)
-		{
-			fav_disp(ptr->next);
-			disp(ptr);
-		}
-		
-		else
-			disp(ptr);
-		
-		if(ptr->next==0)
-			return;
-		
-		ptr=ptr->next;
-		
-	}
-	
-	/*while(ptr!=0){
-		if(ptr->favourites==1){
-			disp(ptr);
-		}
-		ptr=ptr->next;
-	}
-}*/
 
 void display()
 {
@@ -382,10 +356,7 @@ void del()
 			}
 			
 			else if(prev!=ptr)
-			{
 				prev=prev->next;
-				//ptr=ptr->next;
-			}
 	
 			ptr=ptr->next;
 			i++;				
@@ -419,7 +390,7 @@ struct contact* searchByName(char str[50])
 
 int searchByNumber(char str[10])
 {
-	
+	printf("\n");
 	struct contact *ptr = head; int i=0,k=0;
 	int x=strlen(str)-1;
     char num[10];
@@ -453,24 +424,25 @@ int searchByNumber(char str[10])
 
 int searchByAlphabets(char str[50])
 {
+	printf("\n");
 	struct contact* ptr = head; int i;
 	int k=0; // a flag value to check if any contact name with str in it is found
 	
 	if(ptr == 0)  
     {  
-        printf("\nContact is Empty!\n");  
+        empty_message();
     }
     
     else
     {
 		int x=strlen(str);    // used x for storing size, because size name globally declared variable already used 
-		printf("size of str : %d\n",x);
+		//printf("size of str : %d\n",x);
 		
 		struct contact *lb = head;
 		
 		struct contact * lowerBoundary (struct contact* lb, char str[50])   // caller function is available after this function
 		{
-			printf("In lowerboundary func()\n");
+			//printf("In lowerboundary func()\n");
 			struct contact *ptr = lb;
 		
 		    while (ptr!=0)
@@ -539,11 +511,10 @@ void search()
 	{
 		char str[50];
 		printf("\nEnter the name or number you want to search or Press 4 to exit : ");
-		//fgets(str,50,stdin); fgets(str,50,stdin);
 		fflush(stdin);
 		scanf("%[^\t\n]s",str);
 		int i,k=0;
-		printf("str in search() is %s\n",(str));
+		//printf("str in search() is %s\n",(str));
 		for(i=0;i<(strlen(str));i++)
 		{
 			if((str[i]>=97 && str[i]<=122) || (str[i]>=65 && str[i]<=90))
@@ -559,13 +530,13 @@ void search()
 		
 		else if(check_int==1)
 		{
-			printf("Number search\n");
+			//printf("Number search\n");
 			k = searchByNumber(str);
 		}
 			
 		else if (check_int==0)   
 		{
-			printf("Name Search\n");
+			//printf("Name Search\n");
 			k=searchByAlphabets(str);   // checks every character of the input if present in the contact list
 		}
 	
@@ -584,45 +555,204 @@ void search()
 	}
 }
 
-/*void mark_fav_contacts(){
-	struct contact* ptr=head;
-	display();
-	int ch,i=0;
-	printf("\nEnter the no. preceding the contacts to mark as favourite : ");
-	scanf("%d",&ch);
-	//int arr[size];
-	while(ptr!=0)
-	{
-		if(i==(ch-1)){
-			ptr->favourites=1;
-		}
-		else{
-			ptr->favourites=0;
-		}
-	}
-}*/
 
-
-void edit(){
-	
-	printf("In edit()\n\nWork in Progress...\n\n");
+void edit()
+{
 	
 	// accept the contact that the user wants to edit...
-	
-	// make the necessary changes in the contact as suggested by the user
-	
-	// if ptr is the address for that contact
+	int ch=0; struct contact *ptr = head; struct contact *prev = head; int k=0;
+	int check_int=1;
+	if (ptr==0)
+	{
+		empty_message();
+	}
+	else
+	{
+		int choice; int i;
+		do
+		{
+			display();
+			printf("Enter the no. preceding the contact you want to edit :\n");
+			scanf ("%d", &choice);
+			
+			if (choice<1 || choice>size)
+				error_message();
+				
+		}while (choice<1 || choice>size);
+		
+		// if ptr is the address for that contact
+		
+		for (i=1;i<=choice;i++)
+		{	
+			if (i==choice)
+				break;
+				
+			if (ptr!=prev)
+				prev = prev->next;
+				
+			ptr = ptr->next;
+		}
+		
+		// make the necessary changes in the contact as suggested by the user
+		int ch=0;
+		
+		void edit_again(struct contact *ptr, struct contact *prev)
+		{
+			do
+			{
+				
+				printf("Press 1 -> Edit name\n");
+				printf("Press 2 -> Edit number\n");
+				printf("Press 3 -> Edit e-mail\n");
+				printf("Press 0 -> Exit\n");
+				printf("\n");
+				ch=getch();
+			
+				if (ch!=(48+1) && ch!=(48+2) && ch!=(48+3) && ch!=(48))
+					printf ("\nInvalid choice! Try Agian...\n");
+				
+			}while (ch!=(48+1) && ch!=(48+2) && ch!=(48+3) && ch!=(48));
+		
+			// then the node before ptr (say prev) ; prev->next=ptr->next; 	
+			// ptr is extracted from linked list
+				
+			if (ch==(48+1))
+			{
+				struct contact* info = (struct contact*)malloc(sizeof(struct contact));
+				
+				strcpy(info->phone_no, ptr->phone_no);
+				strcpy(info->email, ptr->email);
+				
+				if (ptr->next == 0)
+					prev->next = 0;
+					
+				else
+					prev->next = ptr->next;
+					
+				free(ptr);
+				
+				struct contact *p = 0;
+				
+				void name_change()
+				{
+					printf ("\nEnter the edited name :\n");
+					printf("\nName : ");
+					fflush(stdin);
+					scanf ("%[^\t\n]s", info->name);
+					info->name[strlen(info->name)] = '\n';
 
-    // then the node before ptr (say prev) ; prev->next=ptr->next; 
-    
-    // ptr is extracted from linked list
-    
-    // insertion_sort(ptr);  // passed for insertion into LL by sorting
+					p=searchByName(info->name);
+					if(p!=0)
+					{
+  						printf("\nThis Contact matches with %s",info->name);
+						disp(p);
+ 						printf("\nContact Already Available\n...\n");
+  						//free(info);
+ 						name_change();
+					}
+				}
+				name_change();
+				// insertion_sort(ptr);  // passed for insertion into LL by sorting
+				insertion_sort(info);
+				printf ("\n\nContact Edited!\n\n");
+			}
+			
+			else if (ch==(48+2))
+			{
+				char str[50];
+				
+				void phone_number()
+				{
+					printf ("\nEnter the edited phone no. :\n");
+					printf ("\nPhone no. : ");
+					scanf ("%s", str);
+				
+					if(strlen(ptr->phone_no)<10)
+					{
+						printf("\nInvalid Phone Number\nTry Again!!\n");
+						phone_number();
+					}
 	
+					// to check if phone_no has only digits
+	
+					for(i=0;i<strlen(str);i++)
+					{
+						if(str[i]<48 || str[i]>57)
+						{
+							printf("\nInvalid Phone Number\nTry Again!!\n"); // means it is not a phone number
+							phone_number();
+						}
+					}
+	
+					// to check if phone no. is already available or not...
+	
+					int k=searchByNumber(str);
+					if(k==1)
+					{
+						printf("\nContact Already Available!!\n");
+						phone_number();
+					}
+				}
+				phone_number();
+				strcpy(ptr->phone_no, str);
+				printf ("\n\nContact Edited!\n\n");
+			}
+			
+			else if (ch==(48+3))
+			{
+				printf ("\nEnter the edited E-mail ID:\n");
+				printf ("\nE-mail : ");
+				scanf ("%s", ptr->email);
+				printf ("\n\nContact Edited!\n\n");
+			}
+			
+			else if (ch==(48))
+				options();
+			
+			char ch1;
+			do
+			{
+				printf ("\nDo you want to continue editing this contact ?\nY/N : ");
+				fflush(stdin);
+				scanf ("%c", &ch1);
+				
+				if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
+					error_message();
+				
+			}
+			while (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n');
+			
+			if (ch1=='Y' || ch1=='y')
+				edit_again(ptr, prev);
+				
+			else if (ch1=='N' || ch1=='n')
+			{
+				char ch2;
+				do
+				{
+					printf ("\nDo you want to edit another contact ?\nY/N : ");
+					fflush(stdin);
+					scanf ("%c", &ch2);
+				
+					if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
+						error_message();
+				
+				}
+				while (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n');
+				
+				if (ch2=='Y' || ch2=='y')
+					edit();
+					
+				else if (ch1=='N' || ch=='n')
+					options();
+			}	
+		}
+		edit_again(ptr, prev);
+	}
 }
 
-void options(){     
-	
+void options()
+{     
 	int ch=0,x;
 	
 	while(ch>= 0){
@@ -642,8 +772,8 @@ void options(){
 		if(ch==(48+1))
 			insert();
 			
-		/*else if(ch==(48+2))
-			edit();*/
+		else if(ch==(48+2))
+			edit();
 			
 		else if(ch==(48+3))
 			del();
@@ -724,7 +854,8 @@ int main()
 	   	if(fo1==NULL){
 			printf("File contact#1.txt can't be opened"); exit(0);
 		}
-	   	printf("Size : %d\n\n",size); int i; 
+	   	//printf("Size : %d\n\n",size);
+		int i; 
 	   	size=size/3;
 		   	
 		for(i=0;i<(size);i++)
