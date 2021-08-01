@@ -1,0 +1,171 @@
+void insert()
+{
+	char ch; int i; char str[10]; int choice; int check=0;
+	struct contact* ptr = 0; char pass[50]; char num[10]; char email[50];
+	struct contact* info = (struct contact*)malloc(sizeof(struct contact));
+	info->next=0;
+	
+	// Accepting details of the contact
+	do{
+		printf("Press 1 to enter the contact details :\n");
+		printf("Press 2 to Skip :\n\n");
+		fflush(stdin);
+		choice = getch();
+		if(choice!=(48+1) && choice!=(48+2))
+			error_message();
+		
+	}while(choice!=(48+1) && choice!=(48+2));
+	
+	if(choice==(48+2)){  // user skipping this function insert()
+		options();
+	}
+	
+	// else user enter its details
+	
+	printf("Phone number : ");
+	scanf("%s",info->phone_no);
+	
+	// Phone number Validation in 3 steps
+	
+	// phone size should be exactly = 10
+	
+	if(strlen(info->phone_no)<10)
+	{
+		printf("Invalid Phone Number\nTry Again!!\n");
+		insert();
+	}
+	strcpy(str,info->phone_no);
+	
+	// to check if phone_no has only digits
+	
+	for(i=0;i<strlen(str);i++)
+	{
+		if(str[i]<48 || str[i]>57)
+		{
+			printf("Invalid Phone Number\nTry Again!!\n"); // means it is not a phone number
+			insert();
+		}
+	}
+	
+	// to check if phone no. is already available or not...
+	
+	int k=searchByNumber(info->phone_no);
+	if(k==1){
+		printf("Contact Already Available!!\n");
+		disp(info);
+		free(info);
+		options();
+	}
+			
+	// Accepting name from the user
+	
+	printf("Name : ");
+	fgets(info->name,50,stdin);
+	fgets(info->name,50,stdin);
+	
+	// Name Validation in 1 Step
+	
+	// checking if the contact name is already available or not
+	ptr=searchByName(info->name);
+	if(ptr!=0){
+		printf("This Contact matches with %s",info->name);
+		disp(ptr);
+		printf("Contact Already Available\n");
+		free(info);
+		options();
+	}
+	
+	// Accepting email address from the user
+	char s[50];
+	printf("Email address (Optional) \nOr press E to skip: ");
+	//scanf("%s",info->email);
+	fflush(stdin);
+	fgets(s,50,stdin);
+	
+	// E-mail validation 
+	
+		
+	/*if((info->email[0]=='E' || info->email[0]=='e') && strlen(info->email)==1)   // a condition if a user do not want to store the email address
+	{  
+		strcpy(info->email,"N/A");
+	}*/
+	
+	if((s[0]=='E' || s[0]=='e') && strlen(s)==1)   // a condition if a user do not want to store the email address
+	{  
+		strcpy(info->email,"N/A");
+	}
+	
+	else
+	{
+		int check_email(char s[50])
+		{
+			
+			int condition_counter=0; int valid=0;   //  0 -> False  |   1 -> True
+			int x=strlen(s)-2;
+			printf("size of s : %d\n",strlen(s));
+			printf("last character of email id : %c\n",s[x]);
+			if((s[x]>=97 && s[x]<=122) || (s[x]>=65 && s[x]<=90) || (s[x]>=48 && s[x]<=57)){
+				printf("last character of email id valid\n");
+				condition_counter++;
+			}
+				
+			for(i=0;i<(x+1);i++)
+			{
+				if(s[i]=='@')
+				{
+					printf("@ present\n");
+					condition_counter++;
+					
+					// to check if there is no special characters before and after '@'
+					
+					if((s[i-1]>=97 && s[i-1]<=122) || (s[i-1]>=65 && s[i-1]<=90) || (s[i-1]>=48 && s[i-1]<=57)) 	  // before '@'
+					{
+						if((s[i+1]>=97 && s[i+1]<=122) || (s[i+1]>=65 && s[i+1]<=90) || (s[i+1]>=48 && s[i+1]<=57))   // after  '@'
+						{
+							printf("before @ : %c ; after @ : %c\n",s[i-1],s[i+1]);
+							condition_counter++;
+						}
+					}
+				}
+				
+				else if(s[i]==' ')
+				{
+					condition_counter=-1;
+					printf("Space found\n");
+					break;
+				}
+			}
+						
+			if(condition_counter==3)
+				valid=1;
+							
+			return valid;
+		} // end of func()
+		check = check_email(s);
+			
+		if(check==1)   // all conditions for valid email id satisfied...
+			strcpy(info->email,s);
+		else
+		{
+			printf("Invalid E-mail ID\n\n");
+			options();
+		}
+	
+	}
+	
+	// Insertion	
+	
+	ptr=head;
+	
+	if(head!=0)
+	{
+		insertion_sort(info);   // a function to insert a contact in an alphabetic order
+	}
+	
+	else // if contact list or file is empty...
+	{head = last = info; }
+			
+	printf("\nNew Contact Added\n");
+	size=size+1; // 1 insertion is +1 increase in total contacts
+	
+}
