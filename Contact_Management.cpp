@@ -87,6 +87,7 @@ void display()
 void update_file(struct contact* ptr)       // updating contact 
 {	
 	FILE *file_update = fopen("C:\\Users\\ABESH BISWAS\\OneDrive\\Desktop\\contact#1.txt","w");
+	//FILE *file_update = fopen("C:\\Users\\MAYUKH\\Desktop\\contact#1.txt","w");
 	
 	if(file_update==NULL){
 		printf("\nFile contact_names.txt cannot be opened\n"); exit(0);
@@ -842,6 +843,7 @@ void options()
 int main()
 {
 	FILE *file_read = fopen("C:\\Users\\ABESH BISWAS\\OneDrive\\Desktop\\contact#1.txt","r");
+	//FILE *file_read = fopen("C:\\Users\\MAYUKH\\Desktop\\contact#1.txt","r");
 	
 	if(file_read==NULL){
 		printf("File contact#1.txt can't be opened");
@@ -870,6 +872,8 @@ int main()
 	   	//extracting contact names from file
 	   	
 	   	FILE *fo1 = fopen("C:\\Users\\ABESH BISWAS\\OneDrive\\Desktop\\contact#1.txt","r");
+	   	//FILE *fo1 = fopen("C:\\Users\\MAYUKH\\Desktop\\contact#1.txt","r");
+	   	
 	   	if(fo1==NULL){
 			printf("File contact#1.txt can't be opened"); exit(0);
 		}
