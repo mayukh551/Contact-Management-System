@@ -65,44 +65,51 @@ void edit()
 			if (ch==(48+1))
 			{
 				x++;
-				info = (struct contact*)malloc(sizeof(struct contact));
-				strcpy(info->phone_no, ptr->phone_no);
-				strcpy(info->email, ptr->email);
-				
-				if (ptr==head)
+				if (x==1)
 				{
-					head = ptr->next;
-					prev = head;
-				}
+					//info = (struct contact*)malloc(sizeof(struct contact));
+					strcpy(info->phone_no, ptr->phone_no);
+					strcpy(info->email, ptr->email);
+					
+					if (ptr==head)
+					{
+						head = ptr->next;
+						prev = head;
+					}
 				
-				else if (ptr->next == 0)
-					prev->next = 0;
+					else if (ptr->next == 0)
+						prev->next = 0;
 					
-				else
-					prev->next = ptr->next;
+					else
+						prev->next = ptr->next;
+				}	
 					
+						
 				
 				struct contact *p = 0;
+				char str[50];
 				
 				void name_change()
 				{
 					printf ("\nEnter the edited name :\n");
 					printf("\nName : ");
 					fflush(stdin);
-					scanf ("%[^\t\n]s", info->name);
-					info->name[strlen(info->name)] = '\n';
+					scanf ("%[^\t\n]s", str);
+					str[strlen(str)] = '\n';
 					
 					
 
-					p=searchByName(info->name);
+					p=searchByName(str);
 					if(p!=0)
 					{
-  						printf("\nThis Contact matches with %s",info->name);
+  						printf("\nThis Contact matches with %s",str);
 						disp(p);
  						printf("\nContact Already Available\n...\n");
   						//free(info);
  						name_change();
 					}
+					
+					strcpy (info->name, str);
 				}
 				name_change();
 				free (ptr);
@@ -177,6 +184,7 @@ void edit()
 				printf ("\nDo you want to continue editing this contact ?\nY/N : \n");
 				fflush(stdin);
 				ch1 = getch();
+				fflush(stdin);
 				
 				if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
 					error_message();
