@@ -1,0 +1,224 @@
+void edit()
+{
+	
+	// accept the contact that the user wants to edit...
+	struct contact *info = (struct contact*)malloc(sizeof(struct contact));
+	int ch=0; struct contact *ptr = head; struct contact *prev = head; int k=0;
+	int check_int=1;
+	if (ptr==0)
+	{
+		empty_message();
+	}
+	else
+	{
+		int choice; int i;
+		do
+		{
+			display();
+			printf("Enter the no. preceding the contact you want to edit :\n");
+			scanf ("%d", &choice);
+			
+			if (choice<1 || choice>size)
+				error_message();
+				
+		}while (choice<1 || choice>size);
+		
+		// if ptr is the address for that contact
+		
+		for (i=1;i<=choice;i++)
+		{	
+			if (i==choice)
+				break;
+				
+			if (ptr!=prev)
+				prev = prev->next;
+				
+			ptr = ptr->next;
+		}
+		
+		// make the necessary changes in the contact as suggested by the user
+		int ch=0; int x=0;
+		
+		
+		void edit_again(struct contact *ptr, struct contact *prev)
+		{
+			
+			do
+			{
+				
+				printf("\nPress 1 -> Edit name\n");
+				printf("Press 2 -> Edit number\n");
+				printf("Press 3 -> Edit e-mail\n");
+				printf("Press 0 -> Exit\n");
+				printf("\n");
+				ch=getch();
+			
+				if (ch!=(48+1) && ch!=(48+2) && ch!=(48+3) && ch!=(48))
+					printf ("\nInvalid choice! Try Agian...\n");
+				
+			}while (ch!=(48+1) && ch!=(48+2) && ch!=(48+3) && ch!=(48));
+		
+			// then the node before ptr (say prev) ; prev->next=ptr->next; 	
+			// ptr is extracted from linked list
+			
+				
+			if (ch==(48+1))
+			{
+				x++;
+				if (x==1)
+				{
+					//info = (struct contact*)malloc(sizeof(struct contact));
+					strcpy(info->phone_no, ptr->phone_no);
+					strcpy(info->email, ptr->email);
+					
+					if (ptr==head)
+					{
+						head = ptr->next;
+						prev = head;
+					}
+				
+					else if (ptr->next == 0)
+						prev->next = 0;
+					
+					else
+						prev->next = ptr->next;
+				}	
+					
+						
+				
+				struct contact *p = 0;
+				char str[50];
+				
+				void name_change()
+				{
+					printf ("\nEnter the edited name :\n");
+					printf("\nName : ");
+					fflush(stdin);
+					scanf ("%[^\t\n]s", str);
+					str[strlen(str)] = '\n';
+					
+					
+
+					p=searchByName(str);
+					if(p!=0)
+					{
+  						printf("\nThis Contact matches with %s",str);
+						disp(p);
+ 						printf("\nContact Already Available\n...\n");
+  						//free(info);
+ 						name_change();
+					}
+					
+					strcpy (info->name, str);
+				}
+				name_change();
+				free (ptr);
+				free (p);
+				printf ("\nContact Edited!\n");
+				// insertion_sort(ptr);  // passed for insertion into LL by sorting
+				insertion_sort(info);
+			}
+			
+			else if (ch==(48+2))
+			{
+				char str[50];
+
+				if (x!=0)	
+					ptr = info;
+				
+				void phone_number()
+				{
+					printf ("\nEnter the edited phone no. :\n");
+					printf ("\nPhone no. : ");
+					fflush(stdin);
+					scanf ("%s", str);
+				
+					if(strlen(str)<10 || strlen(str)>10)
+					{
+						printf("\nInvalid Phone Number\nTry Again!!\n");
+						phone_number();
+					}
+	
+					// to check if phone_no has only digits
+	
+					for(i=0;i<strlen(str);i++)
+					{
+						if(str[i]<48 || str[i]>57)
+						{
+							printf("\nInvalid Phone Number\nTry Again!!\n"); // means it is not a phone number
+							phone_number();
+						}
+					}
+	
+					// to check if phone no. is already available or not...
+	
+					int k=searchByNumber(str);
+					if(k==1)
+					{
+						printf("\nContact Already Available!!\n");
+						phone_number();
+					}
+				}
+				phone_number();
+				strcpy (ptr->phone_no, str);
+				printf ("Contact Edited!\n");
+			}
+			
+			else if (ch==(48+3))
+			{
+				if (x!=0)	
+					ptr = info;
+				
+				printf ("\nEnter the edited E-mail ID:\n");
+				printf ("\nE-mail : ");
+				scanf ("%s", ptr->email);
+				printf ("\nContact Edited!\n");
+			}
+			
+			else if (ch==(48))
+				options();
+			
+			char ch1;
+			do
+			{
+				printf ("\nDo you want to continue editing this contact ?\nY/N : \n");
+				fflush(stdin);
+				ch1 = getch();
+				fflush(stdin);
+				
+				if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
+					error_message();
+				
+			}
+			while (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n');
+			
+			if (ch1=='Y' || ch1=='y')
+				edit_again(ptr, prev);
+				
+			else if (ch1=='N' || ch1=='n')
+			{
+				char ch2;
+				do
+				{
+					printf ("\n\nDo you want to edit another contact ?\nY/N : \n");
+					fflush(stdin);
+					ch2 = getch();
+				
+					if (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n')
+						error_message();
+				
+				}
+				while (ch1!='Y' && ch1!='y' && ch1!='N' && ch1!='n');
+				
+				
+				if (ch2=='Y' || ch2=='y')
+					edit();
+					
+					
+				else if (ch1=='N' || ch=='n')
+					options();
+			}
+		}
+		edit_again(ptr, prev);
+	}
+}
