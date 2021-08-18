@@ -171,23 +171,23 @@ void insert()
 	fflush(stdin);
 	scanf("%[^\t\n]s", str);
 	
-	// phone size should be exactly = 10
-
-	if(strlen(str)!=10)
-	{
-		printf("Phone Number should consist of exactly 10 digits\nTry Again!!\n");
-		insert(); return;
-	}
-	
 	// to check if phone_no has only digits
 
 	for(i=0;i<strlen(str);i++)
 	{
 		if(str[i]<48 || str[i]>57)
 		{
-			printf("It is not a Phone Number\nTry Again!!\n"); // means it is not a phone number
+			printf("\nIt is not a Phone Number\nTry Again!!\n\n"); // means it is not a phone number
 			insert(); return;
 		}
+	}
+	
+	// phone size should be exactly = 10
+
+	if(strlen(str)!=10)
+	{
+		printf("\nPhone Number should consist of exactly 10 digits\nTry Again!!\n");
+		insert(); return;
 	}
 	
 	// to check if phone no. is already available or not...
@@ -686,13 +686,7 @@ void edit()
 					printf ("\nPhone no. : +91-");
 					fflush(stdin);
 					scanf ("%s", str);
-				
-					if(strlen(str)<10 || strlen(str)>10)
-					{
-						printf("\nPhone number should consist of exactly 10 digits\nTry Again!!\n");
-						phone_number();
-					}
-	
+					
 					// to check if phone_no has only digits
 	
 					for(i=0;i<strlen(str);i++)
@@ -702,6 +696,12 @@ void edit()
 							printf("\nIt is not a phone number\nTry Again!!\n"); // means it is not a phone number
 							phone_number();
 						}
+					}
+				
+					if(strlen(str)<10 || strlen(str)>10)
+					{
+						printf("\nPhone number should consist of exactly 10 digits\nTry Again!!\n");
+						phone_number();
 					}
 	
 					// to check if phone no. is already available or not...
